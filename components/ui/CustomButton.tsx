@@ -20,7 +20,7 @@ export default function CustomButton({ onPress, title, button, text }: ButtonPro
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 17,
         fontWeight: 'bold',
         textAlign: 'center',
         textTransform: 'uppercase',

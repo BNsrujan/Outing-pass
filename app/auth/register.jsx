@@ -7,6 +7,7 @@ import CustomButton from "@/components/ui/CustomButton";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
+// Validation schema with consistent key names
 const validationSchema = Yup.object({
     name: Yup.string()
         .required("Name is required"),
@@ -21,7 +22,7 @@ const validationSchema = Yup.object({
         .required("USN is required"),
     room: Yup.string()
         .required("Room is required"),
-    Block: Yup.string()
+    block: Yup.string()
         .oneOf(["A", "B", "C", "D"], "Invalid Block")
         .required("Block is required"),
 });
@@ -38,13 +39,13 @@ export default function Register() {
                     password: "",
                     usn: "",
                     room: "",
-                    Block: "",
+                    block: "", // lowercase to match validation schema
                 }}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     try {
-                        const response = await axios.post("", values);
-                        console.log(response.data);
+                        const response = await axios.post("http://localhost:8081/student/v1/signup", values);
+                        console.log(response)
                         Alert.alert("Success", "Registration successful!", [
                             {
                                 text: "OK",
@@ -55,8 +56,18 @@ export default function Register() {
                             },
                         ]);
                     } catch (error) {
-                        console.error(error);
-                        Alert.alert("Error", "Something went wrong. Please try again.");
+                        if (error.response) {
+                            console.log("Request error:", error.response.data);
+                        } else if (error.response) {
+                            console.log("Request error:", error.request);
+                        } else {
+                            console.log("error", error.message);
+                        }
+
+                        Alert.alert(
+                            "Error",
+                            error.response?.data?.message || "Something went wrong. Please try again."
+                        );
                     } finally {
                         setSubmitting(false);
                     }
@@ -83,9 +94,9 @@ export default function Register() {
                             value={values.name}
                             placeholderTextColor="gray"
                         />
-                        {touched.name && errors.name ? (
+                        {touched.name && errors.name && (
                             <Text style={styles.error}>{errors.name}</Text>
-                        ) : null}
+                        )}
 
                         <TextInput
                             style={styles.input}
@@ -96,9 +107,9 @@ export default function Register() {
                             keyboardType="email-address"
                             placeholderTextColor="gray"
                         />
-                        {touched.email && errors.email ? (
+                        {touched.email && errors.email && (
                             <Text style={styles.error}>{errors.email}</Text>
-                        ) : null}
+                        )}
 
                         <TextInput
                             style={styles.input}
@@ -109,9 +120,9 @@ export default function Register() {
                             secureTextEntry
                             placeholderTextColor="gray"
                         />
-                        {touched.password && errors.password ? (
+                        {touched.password && errors.password && (
                             <Text style={styles.error}>{errors.password}</Text>
-                        ) : null}
+                        )}
 
                         <TextInput
                             style={styles.input}
@@ -121,9 +132,9 @@ export default function Register() {
                             value={values.usn}
                             placeholderTextColor="gray"
                         />
-                        {touched.usn && errors.usn ? (
+                        {touched.usn && errors.usn && (
                             <Text style={styles.error}>{errors.usn}</Text>
-                        ) : null}
+                        )}
 
                         <TextInput
                             style={styles.input}
@@ -133,16 +144,14 @@ export default function Register() {
                             value={values.room}
                             placeholderTextColor="gray"
                         />
-                        {touched.room && errors.room ? (
+                        {touched.room && errors.room && (
                             <Text style={styles.error}>{errors.room}</Text>
-                        ) : null}
+                        )}
 
                         <View style={styles.pickerContainer}>
                             <Picker
-                                selectedValue={values.Block}
-                                onValueChange={(itemValue) =>
-                                    setFieldValue("Block", itemValue)
-                                }
+                                selectedValue={values.block}
+                                onValueChange={(itemValue) => setFieldValue("block", itemValue)}
                                 style={styles.picker}
                                 mode="dropdown"
                             >
@@ -153,9 +162,9 @@ export default function Register() {
                                 <Picker.Item label="D" value="D" />
                             </Picker>
                         </View>
-                        {touched.Block && errors.Block ? (
-                            <Text style={styles.error}>{errors.Block}</Text>
-                        ) : null}
+                        {touched.block && errors.block && (
+                            <Text style={styles.error}>{errors.block}</Text>
+                        )}
 
                         {isSubmitting ? (
                             <ActivityIndicator size="large" color="#0000ff" />

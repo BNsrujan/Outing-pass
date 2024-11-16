@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TextInput, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, TextInput, SafeAreaView, ActivityIndicator } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -8,31 +8,30 @@ import { Link } from "expo-router";
 // Validation schema using Yup
 const validationSchema = Yup.object({
     email: Yup.string()
-        .required()
+        .required("Email is required")
         .email("Invalid email"),
     password: Yup.string()
-        .required()
+        .required("Password is required")
         .min(6, "Password must be at least 6 characters long"),
     usn: Yup.string()
-        .required()
+        .required("USN is required")
         .matches(/^[A-Za-z0-9]+$/, "USN can only contain letters and numbers"),
 });
 
 export default function Login() {
     return (
-        <SafeAreaView>
-
+        <SafeAreaView style={styles.safeArea}>
             <Formik
                 initialValues={{ email: "", password: "", usn: "" }}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    axios.post('your_api_url_here', values)
+                onSubmit={(values, { setSubmitting, setFieldError }) => {
+                    axios.post('/login', values)
                         .then(response => {
                             console.log(response.data);
                             setSubmitting(false);
                         })
                         .catch(error => {
-                            console.error(error);
+                            setFieldError("general", "Login failed. Please try again.");
                             setSubmitting(false);
                         });
                 }}
@@ -48,6 +47,8 @@ export default function Login() {
                 }) => (
                     <View style={styles.container}>
                         <Text style={styles.title}>Login</Text>
+
+                        {errors.general && <Text style={styles.error}>{errors.general}</Text>}
 
                         <TextInput
                             style={styles.input}
@@ -87,28 +88,37 @@ export default function Login() {
                             <Text style={styles.error}>{errors.password}</Text>
                         ) : null}
 
+                        <Link style={styles.Link} href={"./register"}>Don't have an account? Register</Link>
                         <CustomButton
                             title="Login"
                             onPress={handleSubmit}
                             disabled={isSubmitting}
-                        />
+                            style={styles.Button}
+                        >
+                            {isSubmitting ? <ActivityIndicator color="#fff" /> : null}
+                        </CustomButton >
                     </View>
                 )}
             </Formik>
-            <Link href={"./register"}>Don't have an account? Register</Link>
         </SafeAreaView >
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#fff"
+    },
     container: {
         flex: 1,
         padding: 20,
         justifyContent: "center",
+        // backgroundColor: 
     },
     title: {
         fontSize: 24,
-        marginBottom: 20,
+        fontWeight: "bold",
+        marginBottom: 30,
         textAlign: "center",
     },
     input: {
@@ -123,5 +133,8 @@ const styles = StyleSheet.create({
         color: "red",
         marginBottom: 10,
     },
-});
 
+    Link: {
+        textSizeAdjust: Link
+    }
+});
