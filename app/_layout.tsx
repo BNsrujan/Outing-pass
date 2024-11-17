@@ -3,17 +3,17 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { ToastProvider } from "react-native-toast-notifications";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    ...FontAwesome.font,
   });
 
   useEffect(() => {
@@ -26,18 +26,109 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />
-
+  return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name='auth/register' options={{ headerShown: true, title: 'Regester' }} />
-    </Stack>
-
+    <ToastProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='index' />
+        <Stack.Screen name="(router)/welcome-intro/index" />
+        <Stack.Screen name="(router)/login/index" />
+        <Stack.Screen name="(router)/signUp/index" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </ToastProvider>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* <View style={{ flex: 1 }}>
+{isLoggedIn ? (
+  <View>
+  </View>
+) : (
+  <View>
+  </View>
+)}
+<Stack>
+  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+  <Stack.Screen name="auth/register" options={{ headerShown: true, title: 'Register' }} />
+</Stack>
+</View> */}

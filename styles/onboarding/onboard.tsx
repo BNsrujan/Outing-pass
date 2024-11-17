@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
-  welcomeButtonStyle:{
+  welcomeButtonStyle: {
     backgroundColor: "#2467EC",
     width: responsiveWidth(88),
     height: responsiveHeight(5.5),

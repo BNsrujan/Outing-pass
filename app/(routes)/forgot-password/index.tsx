@@ -1,15 +1,12 @@
-export const SERVER_URL = ""
-
-
-
-
 import { View, Text, StyleSheet } from "react-native";
 
 
-export default function OnBoardingScreen() {
+export default function ForgotPassword() {
     return (
         <View>
-            <Text> </Text>
+            <Text>
+                ForgotPassword
+            </Text>
         </View>
     )
 }

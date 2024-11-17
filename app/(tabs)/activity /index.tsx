@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import CustomButton from '@/components/ui/CustomButton';
+import CustomButton from '@/components/button/CustomButton';
 import { router } from 'expo-router';
 
 export default function index() {
